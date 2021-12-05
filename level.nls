@@ -1,0 +1,108 @@
+globals [level]
+
+breed [goals goal]
+breed [inits init]
+
+inits-own [no algo goal-patch]
+
+to level_1
+  generate-valid-map
+  clear-turtles
+  
+  let start one-of valid-map
+  let pGoal one-of valid-map
+  while [pGoal = start]
+  [
+    set pGoal one-of valid-map
+  ]
+  
+  create-inits 1 
+  [
+    move-to start
+    set color red
+    set goal-patch pGoal
+    set algo algorithm
+  ]
+  
+  create-goals 1 
+  [
+    move-to pGoal
+    set color green
+  ]
+  
+  set level 1
+end
+
+to level_2
+  generate-valid-map
+  clear-turtles
+  
+  let start one-of valid-map
+  let pGoal one-of valid-map
+  while [pGoal = start]
+  [
+    set pGoal one-of valid-map
+  ]
+  
+  let first-algo nobody
+  create-inits 1 
+  [
+    move-to start
+    set color red
+    set no 0
+    set algo random-algorithm
+    set first-algo algo
+    set goal-patch pGoal
+  ]
+  
+  create-inits 1 
+  [
+    move-to pGoal
+    set color blue
+    set no 1
+    set algo "BFS"
+    while [algo = first-algo]
+    [
+      set algo random-algorithm
+    ]
+    set goal-patch start
+  ]
+  
+  set level 2
+end
+
+to level_3
+  generate-valid-map
+  clear-turtles
+  
+  let n 8
+  
+  let goal-point one-of valid-map
+  
+  let i 0
+  let lStart (list)
+  while [i < n]
+  [
+    let start one-of valid-map
+    while [member? start lStart]
+    [
+      set start one-of valid-map
+    ]
+    set lStart fput start lStart
+    
+    create-inits 1 [
+      move-to start
+      set goal-patch goal-point
+      set algo random-algorithm
+      set no i
+    ]
+    set i (i + 1)
+  ]
+  
+  create-goals 1 [
+    move-to goal-point
+    set color green
+  ]
+  
+  set level 3
+end
